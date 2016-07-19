@@ -21,7 +21,6 @@ import retrofit.client.Response;
 public class Retrofit1Activity extends AppCompatActivity implements View.OnClickListener {
 
     private ListView listViewRetrofit;
-    private String[] daftarNama;
     private Button buttonAddRetrofit;
 
     @Override

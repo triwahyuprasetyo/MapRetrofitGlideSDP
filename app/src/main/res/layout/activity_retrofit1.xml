@@ -33,7 +33,7 @@
                 android:id="@+id/button_add_retrofit"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="@string/button_save_addanggota" />
+                android:text="@string/button_add_anggota" />
         </LinearLayout>
 
     </LinearLayout>

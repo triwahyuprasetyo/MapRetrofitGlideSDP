@@ -5,14 +5,22 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
 import com.triwayuprasetyo.mapretrofitglidesdp.httpRequest.HttpRequest;
+import com.triwayuprasetyo.mapretrofitglidesdp.retrofit.AnggotaInterface;
+import com.triwayuprasetyo.mapretrofitglidesdp.retrofit.AnggotaWrapper;
 
 import java.util.HashMap;
+
+import retrofit.Callback;
+import retrofit.RestAdapter;
+import retrofit.RetrofitError;
+import retrofit.client.Response;
 
 public class AddAnggotaActivity extends AppCompatActivity implements View.OnClickListener {
     private ProgressDialog pd;
@@ -97,10 +105,49 @@ public class AddAnggotaActivity extends AppCompatActivity implements View.OnClic
         background.start(); // memanggil thread background agar start
     }
 
+    private void retrofit1SaveAnggota() {
+        //Retrofit 1.9
+        RestAdapter restAdapter = new RestAdapter.Builder()
+                //.setEndpoint("http://www.cheesejedi.com")
+                .setEndpoint("http://triwahyuprasetyo.xyz")
+                .build();
+
+        AnggotaInterface anggotaService = restAdapter.create(AnggotaInterface.class);
+        AnggotaWrapper.Anggota a = new AnggotaWrapper.Anggota();
+        a.setNama(editTextNama.getText().toString());
+        a.setAlamat(editTextAlamat.getText().toString());
+        a.setUsername(editTextUsername.getText().toString());
+        a.setPassword(editTextPassword.getText().toString());
+
+        Log.d("SDP", "Anggota :: " + a.getNama());
+        Log.d("SDP", "Anggota :: " + a.getAlamat());
+        Log.d("SDP", "Anggota :: " + a.getUsername());
+        Log.d("SDP", "Anggota :: " + a.getPassword());
+
+        anggotaService.tambahPostAnggota(a.getNama(),
+                a.getUsername(),
+                a.getPassword(),
+                a.getAlamat(),
+                a.getLatitude(),
+                a.getLongitude(),
+                a.getFoto(), new Callback<Response>() {
+                    @Override
+                    public void success(Response response, Response response2) {
+                        Toast.makeText(getApplicationContext(), "Add Success : " + response2.getStatus(), Toast.LENGTH_LONG).show();
+                    }
+
+                    @Override
+                    public void failure(RetrofitError error) {
+                        Toast.makeText(getApplicationContext(), "Add Error : " + error.getMessage(), Toast.LENGTH_LONG).show();
+                    }
+                });
+    }
+
     @Override
     public void onClick(View v) {
         if (v.getId() == buttonSave.getId()) {
-            httpRequestSaveAnggota(editTextNama.getText().toString(), editTextAlamat.getText().toString(), editTextUsername.getText().toString(), editTextPassword.getText().toString());
+            //httpRequestSaveAnggota(editTextNama.getText().toString(), editTextAlamat.getText().toString(), editTextUsername.getText().toString(), editTextPassword.getText().toString());
+            retrofit1SaveAnggota();
             finish();
         }
     }
