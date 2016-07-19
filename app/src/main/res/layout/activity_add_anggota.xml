@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/activity_add_anggota"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.triwayuprasetyo.mapretrofitglidesdp.AddAnggotaActivity">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/textView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:labelFor="@+id/edittext_nama_addanggota"
+            android:text="@string/textview_nama_addanggota" />
+
+        <EditText
+            android:id="@+id/edittext_nama_addanggota"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:ems="10"
+            android:inputType="textPersonName" />
+
+        <TextView
+            android:id="@+id/textView2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:labelFor="@+id/edittext_alamat_addanggota"
+            android:text="@string/textview_alamat_addanggota" />
+
+        <EditText
+            android:id="@+id/edittext_alamat_addanggota"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:ems="10"
+            android:inputType="textPersonName" />
+
+        <TextView
+            android:id="@+id/textView3"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:labelFor="@+id/edittext_username_addanggota"
+            android:text="@string/textview_username_addanggota" />
+
+        <EditText
+            android:id="@+id/edittext_username_addanggota"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:ems="10"
+            android:inputType="textPersonName" />
+
+        <TextView
+            android:id="@+id/textView4"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:labelFor="@+id/edittext_password_addanggota"
+            android:text="@string/textview_password_addanggota" />
+
+        <EditText
+            android:id="@+id/edittext_password_addanggota"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:ems="10"
+            android:inputType="textVisiblePassword" />
+
+        <Button
+            android:id="@+id/button_save_addanggota"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/button_save_addanggota" />
+    </LinearLayout>
+
+</android.support.constraint.ConstraintLayout>

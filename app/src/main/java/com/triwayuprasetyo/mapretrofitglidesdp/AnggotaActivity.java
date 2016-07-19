@@ -1,6 +1,7 @@
 package com.triwayuprasetyo.mapretrofitglidesdp;
 
 import android.app.ProgressDialog;
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -22,13 +23,14 @@ public class AnggotaActivity extends AppCompatActivity implements View.OnClickLi
     private ProgressDialog pd;
     private String[] daftarId, daftarNama, daftarAlamat, daftarUsername, daftarPassword, daftarLatitude, daftarLongitude, daftarFoto;
     private JSONObject jObject;
-    private String jsonResult = "";
     private Button buttonAddAnggota, buttonRetrofit1, buttonRetrofit2;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_anggota);
+
+        setTitle("HttpRequest");
 
         buttonAddAnggota = (Button) findViewById(R.id.button_add_anggota);
         buttonAddAnggota.setOnClickListener(this);
@@ -43,8 +45,8 @@ public class AnggotaActivity extends AppCompatActivity implements View.OnClickLi
     @Override
     public void onClick(View v) {
         if (v.getId() == buttonAddAnggota.getId()) {
-//            Intent i = new Intent(getApplicationContext(), AddActivity.class);
-//            startActivity(i);
+            Intent i = new Intent(getApplicationContext(), AddAnggotaActivity.class);
+            startActivity(i);
         } else if (v.getId() == buttonRetrofit1.getId()) {
 //            Intent i = new Intent(getApplicationContext(), Retrofit1TestActivity.class);
 //            startActivity(i);
