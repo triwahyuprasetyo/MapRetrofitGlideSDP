@@ -1,13 +1,5 @@
 package com.triwayuprasetyo.mapretrofitglidesdp.retrofit;
 
-import retrofit.Callback;
-import retrofit.client.Response;
-import retrofit.http.Body;
-import retrofit.http.Field;
-import retrofit.http.FormUrlEncoded;
-import retrofit.http.GET;
-import retrofit.http.POST;
-
 /**
  * Created by sdp03 on 7/18/16.
  */

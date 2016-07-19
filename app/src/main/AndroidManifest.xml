@@ -41,6 +41,7 @@
         </activity>
         <activity android:name=".AddAnggotaActivity" />
         <activity android:name=".Retrofit1Activity"></activity>
+        <activity android:name=".Retrofit2Activity"></activity>
     </application>
 
 </manifest>

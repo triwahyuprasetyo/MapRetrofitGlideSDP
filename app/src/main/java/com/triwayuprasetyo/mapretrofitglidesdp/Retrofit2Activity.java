@@ -48,7 +48,15 @@ public class Retrofit2Activity extends AppCompatActivity implements View.OnClick
         }
     }
 
-    private void retrieveAnggota() {
+    @Override
+    protected void onResume() {
+        super.onResume();
+        Toast.makeText(getApplicationContext(), "OnResume", Toast.LENGTH_SHORT).show();
+        Log.i("SDP RETROFIT ", "ON RESUME");
+        retrofit2RetrieveAnggota();
+    }
+
+    private void retrofit2RetrieveAnggota() {
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl("http://triwahyuprasetyo.xyz/")
                 .addConverterFactory(GsonConverterFactory.create())
