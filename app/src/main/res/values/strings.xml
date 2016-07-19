@@ -1,4 +1,7 @@
 <resources>
     <string name="app_name">MapRetrofitGlideSDP</string>
     <string name="title_activity_maps">Map</string>
+    <string name="button_add_anggota">Add Anggota</string>
+    <string name="button_retrofit1">Retrofit 1.9</string>
+    <string name="button_retrofit2">Retrofit 2.1</string>
 </resources>
