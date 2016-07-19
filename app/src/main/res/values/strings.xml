@@ -4,6 +4,7 @@
     <string name="button_add_anggota">Add Anggota</string>
     <string name="button_retrofit1">Retrofit 1.9</string>
     <string name="button_retrofit2">Retrofit 2.1</string>
+    <string name="button_glide">Glide</string>
     <string name="textview_nama_addanggota">Nama</string>
     <string name="textview_alamat_addanggota">Alamat</string>
     <string name="textview_username_addanggota">Username</string>

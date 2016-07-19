@@ -40,8 +40,9 @@
             </intent-filter>
         </activity>
         <activity android:name=".AddAnggotaActivity" />
-        <activity android:name=".Retrofit1Activity"></activity>
-        <activity android:name=".Retrofit2Activity"></activity>
+        <activity android:name=".Retrofit1Activity" />
+        <activity android:name=".Retrofit2Activity" />
+        <activity android:name=".GlideActivity"></activity>
     </application>
 
 </manifest>

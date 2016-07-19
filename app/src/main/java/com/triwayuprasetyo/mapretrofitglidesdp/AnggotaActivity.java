@@ -23,7 +23,7 @@ public class AnggotaActivity extends AppCompatActivity implements View.OnClickLi
     private ProgressDialog pd;
     private String[] daftarId, daftarNama, daftarAlamat, daftarUsername, daftarPassword, daftarLatitude, daftarLongitude, daftarFoto;
     private JSONObject jObject;
-    private Button buttonAddAnggota, buttonRetrofit1, buttonRetrofit2;
+    private Button buttonAddAnggota, buttonRetrofit1, buttonRetrofit2, buttonGlide;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,6 +38,8 @@ public class AnggotaActivity extends AppCompatActivity implements View.OnClickLi
         buttonRetrofit1.setOnClickListener(this);
         buttonRetrofit2 = (Button) findViewById(R.id.button_retrofit2);
         buttonRetrofit2.setOnClickListener(this);
+        buttonGlide = (Button) findViewById(R.id.button_glide);
+        buttonGlide.setOnClickListener(this);
 
         listViewAnggota = (ListView) findViewById(R.id.listview_anggota);
     }
@@ -51,6 +53,9 @@ public class AnggotaActivity extends AppCompatActivity implements View.OnClickLi
             Intent i = new Intent(getApplicationContext(), Retrofit1Activity.class);
             startActivity(i);
         } else if (v.getId() == buttonRetrofit2.getId()) {
+            Intent i = new Intent(getApplicationContext(), Retrofit2Activity.class);
+            startActivity(i);
+        }else if (v.getId() == buttonGlide.getId()) {
             Intent i = new Intent(getApplicationContext(), Retrofit2Activity.class);
             startActivity(i);
         }
