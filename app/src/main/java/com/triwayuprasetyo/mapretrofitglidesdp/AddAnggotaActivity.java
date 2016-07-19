@@ -5,22 +5,14 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
 import com.triwayuprasetyo.mapretrofitglidesdp.httpRequest.HttpRequest;
-import com.triwayuprasetyo.mapretrofitglidesdp.retrofit.AnggotaInterface;
-import com.triwayuprasetyo.mapretrofitglidesdp.retrofit.AnggotaWrapper;
 
 import java.util.HashMap;
-
-import retrofit.Callback;
-import retrofit.RestAdapter;
-import retrofit.RetrofitError;
-import retrofit.client.Response;
 
 public class AddAnggotaActivity extends AppCompatActivity implements View.OnClickListener {
     private ProgressDialog pd;
@@ -106,6 +98,7 @@ public class AddAnggotaActivity extends AppCompatActivity implements View.OnClic
     }
 
     private void retrofit1SaveAnggota() {
+        /*
         //Retrofit 1.9
         RestAdapter restAdapter = new RestAdapter.Builder()
                 //.setEndpoint("http://www.cheesejedi.com")
@@ -141,6 +134,7 @@ public class AddAnggotaActivity extends AppCompatActivity implements View.OnClic
                         Toast.makeText(getApplicationContext(), "Add Error : " + error.getMessage(), Toast.LENGTH_LONG).show();
                     }
                 });
+        */
     }
 
     @Override

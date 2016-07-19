@@ -5,18 +5,8 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
-import android.widget.Toast;
-
-import com.triwayuprasetyo.mapretrofitglidesdp.retrofit.AnggotaInterface;
-import com.triwayuprasetyo.mapretrofitglidesdp.retrofit.AnggotaWrapper;
-
-import retrofit.Callback;
-import retrofit.RestAdapter;
-import retrofit.RetrofitError;
-import retrofit.client.Response;
 
 public class Retrofit1Activity extends AppCompatActivity implements View.OnClickListener {
 
@@ -43,6 +33,7 @@ public class Retrofit1Activity extends AppCompatActivity implements View.OnClick
     }
 
     private void retrieveData() {
+        /*
         //Retrofit 1.9
         RestAdapter restAdapter = new RestAdapter.Builder()
                 .setEndpoint("http://triwahyuprasetyo.xyz")
@@ -76,6 +67,7 @@ public class Retrofit1Activity extends AppCompatActivity implements View.OnClick
             }
 
         });
+        */
     }
 
     @Override

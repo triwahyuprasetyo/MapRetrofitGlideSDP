@@ -13,6 +13,7 @@ import retrofit.http.POST;
  */
 
 public interface AnggotaInterface {
+    /*
     //Retrofit 1.9
     @GET("/daftaranggota.php")
     void getDataAnggota(Callback<AnggotaWrapper> callback);
@@ -30,4 +31,5 @@ public interface AnggotaInterface {
                            @Field("longitude") String longitude,
                            @Field("foto") String foto,
                            Callback<Response> callback);
+    */
 }
