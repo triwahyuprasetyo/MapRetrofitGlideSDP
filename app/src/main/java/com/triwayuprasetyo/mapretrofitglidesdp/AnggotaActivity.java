@@ -56,7 +56,7 @@ public class AnggotaActivity extends AppCompatActivity implements View.OnClickLi
             Intent i = new Intent(getApplicationContext(), Retrofit2Activity.class);
             startActivity(i);
         }else if (v.getId() == buttonGlide.getId()) {
-            Intent i = new Intent(getApplicationContext(), Retrofit2Activity.class);
+            Intent i = new Intent(getApplicationContext(), GlideActivity.class);
             startActivity(i);
         }
     }

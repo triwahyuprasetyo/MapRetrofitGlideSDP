@@ -35,17 +35,24 @@
                 android:layout_height="wrap_content"
                 android:text="@string/button_add_anggota" />
 
-            <Button
-                android:id="@+id/button_retrofit1"
+            <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/button_retrofit1" />
+                android:layout_height="wrap_content">
 
-            <Button
-                android:id="@+id/button_retrofit2"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/button_retrofit2" />
+                <Button
+                    android:id="@+id/button_retrofit1"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/button_retrofit1"
+                    android:layout_weight="1" />
+
+                <Button
+                    android:id="@+id/button_retrofit2"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/button_retrofit2"
+                    android:layout_weight="1" />
+            </LinearLayout>
 
             <Button
                 android:id="@+id/button_glide"

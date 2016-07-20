@@ -10,4 +10,5 @@
     <string name="textview_username_addanggota">Username</string>
     <string name="textview_password_addanggota">Password</string>
     <string name="button_save_addanggota">Save</string>
+    <string name="imageView_contentDescription">image from glide</string>
 </resources>
