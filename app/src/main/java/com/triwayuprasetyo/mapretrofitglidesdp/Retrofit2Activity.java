@@ -72,11 +72,11 @@ public class Retrofit2Activity extends AppCompatActivity implements View.OnClick
                 String[] daftarNama = new String[response.body().getAnggota().size()];
                 int i = 0;
                 for (AnggotaWrapper.Anggota anggota : response.body().getAnggota()) {
-                    Log.d("SDP", "Anggota :: " + anggota.getId());
-                    Log.d("SDP", "Anggota :: " + anggota.getNama());
-                    Log.d("SDP", "Anggota :: " + anggota.getAlamat());
-                    Log.d("SDP", "Anggota :: " + anggota.getUsername());
-                    Log.d("SDP", "Anggota :: " + anggota.getPassword());
+                    Log.d("SDP", "Anggota :: " + anggota.getId()+" : "+anggota.getFoto());
+                    Log.d("SDP", "Anggota :: " + anggota.getNama()+" : "+anggota.getFoto());
+                    Log.d("SDP", "Anggota :: " + anggota.getAlamat()+" : "+anggota.getFoto());
+                    Log.d("SDP", "Anggota :: " + anggota.getUsername()+" : "+anggota.getFoto());
+                    Log.d("SDP", "Anggota :: " + anggota.getPassword()+" : "+anggota.getFoto());
                     Log.d("SDP", "=======================================");
                     daftarNama[i] = anggota.getNama();
                     i++;
