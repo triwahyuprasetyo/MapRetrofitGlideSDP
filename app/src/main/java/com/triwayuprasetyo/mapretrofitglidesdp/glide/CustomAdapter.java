@@ -3,6 +3,7 @@ package com.triwayuprasetyo.mapretrofitglidesdp.glide;
 /**
  * Created by why on 7/20/16.
  */
+
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -18,13 +19,15 @@ import com.triwayuprasetyo.mapretrofitglidesdp.R;
 
 public class CustomAdapter extends BaseAdapter {
     private static LayoutInflater inflater = null;
-    String[] result;
+    String[] daftarNama;
+    String[] daftarAlamat;
     Context context;
     int[] imageId;
 
-    public CustomAdapter(GlideActivity glideActivity, String[] prgmNameList, int[] prgmImages) {
+    public CustomAdapter(GlideActivity glideActivity, String[] daftarNama, String[] daftarAlamat, int[] prgmImages) {
         // TODO Auto-generated constructor stub
-        result = prgmNameList;
+        this.daftarNama = daftarNama;
+        this.daftarAlamat = daftarAlamat;
         context = glideActivity;
         imageId = prgmImages;
         inflater = (LayoutInflater) context.
@@ -34,7 +37,7 @@ public class CustomAdapter extends BaseAdapter {
     @Override
     public int getCount() {
         // TODO Auto-generated method stub
-        return result.length;
+        return daftarNama.length;
     }
 
     @Override
@@ -55,22 +58,25 @@ public class CustomAdapter extends BaseAdapter {
         Holder holder = new Holder();
         View rowView;
         rowView = inflater.inflate(R.layout.layout_listview_glide, null);
-        holder.tv = (TextView) rowView.findViewById(R.id.textView_nama_listView_glide);
+        holder.textViewName = (TextView) rowView.findViewById(R.id.textView_nama_listView_glide);
+        holder.textViewAlamat = (TextView) rowView.findViewById(R.id.textView_alamat_listView_glide);
         holder.img = (ImageView) rowView.findViewById(R.id.imageView_listView_glide);
-        holder.tv.setText(result[position]);
+        holder.textViewName.setText(daftarNama[position]);
+        holder.textViewAlamat.setText(daftarAlamat[position]);
         holder.img.setImageResource(imageId[position]);
         rowView.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
                 // TODO Auto-generated method stub
-                Toast.makeText(context, "You Clicked " + result[position], Toast.LENGTH_LONG).show();
+                Toast.makeText(context, "You Clicked " + daftarNama[position], Toast.LENGTH_LONG).show();
             }
         });
         return rowView;
     }
 
     public class Holder {
-        TextView tv;
+        TextView textViewName;
+        TextView textViewAlamat;
         ImageView img;
     }
 
