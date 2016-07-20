@@ -5,32 +5,30 @@ package com.triwayuprasetyo.mapretrofitglidesdp.glide;
  */
 
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.triwayuprasetyo.mapretrofitglidesdp.GlideActivity;
 import com.triwayuprasetyo.mapretrofitglidesdp.R;
 
-public class CustomAdapter extends BaseAdapter {
-    private static LayoutInflater inflater = null;
-    String[] daftarNama;
-    String[] daftarAlamat;
-    String[] daftarUrlFoto;
-    Context context;
-    int[] imageId;
+public class CustomAdapter extends BaseAdapter implements AdapterView.OnItemClickListener {
+    private LayoutInflater inflater;
+    private String[] daftarNama, daftarAlamat, daftarUrlFoto;
+    private Context context;
 
-    public CustomAdapter(GlideActivity glideActivity, String[] daftarNama, String[] daftarAlamat, int[] prgmImages, String[] daftarUrlFoto) {
-        // TODO Auto-generated constructor stub
+    public CustomAdapter(GlideActivity glideActivity, String[] daftarNama, String[] daftarAlamat, String[] daftarUrlFoto) {
         this.daftarNama = daftarNama;
         this.daftarAlamat = daftarAlamat;
         this.daftarUrlFoto = daftarUrlFoto;
         context = glideActivity;
-        imageId = prgmImages;
         inflater = (LayoutInflater) context.
                 getSystemService(Context.LAYOUT_INFLATER_SERVICE);
     }
@@ -54,46 +52,33 @@ public class CustomAdapter extends BaseAdapter {
     }
 
     @Override
-    public View getView(final int position, View recycled, ViewGroup parent) {
-        // TODO Auto-generated method stub
-//        Holder holder = new Holder();
-//        View rowView;
-//        rowView = inflater.inflate(R.layout.layout_listview_glide, null);
-//        holder.textViewName = (TextView) rowView.findViewById(R.id.textView_nama_listView_glide);
-//        holder.textViewAlamat = (TextView) rowView.findViewById(R.id.textView_alamat_listView_glide);
-//        //holder.img = (ImageView) rowView.findViewById(R.id.imageView_listView_glide);
-//        holder.textViewName.setText(daftarNama[position]);
-//        holder.textViewAlamat.setText(daftarAlamat[position]);
-//        //holder.img.setImageResource(imageId[position]);
-//        rowView.setOnClickListener(new OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                // TODO Auto-generated method stub
-//                Toast.makeText(context, "You Clicked " + daftarNama[position], Toast.LENGTH_LONG).show();
-//            }
-//        });
+    public View getView(final int position, View convertView, ViewGroup parent) {
+        convertView = inflater.inflate(R.layout.layout_listview_glide, null);
+        TextView textViewName = (TextView) convertView.findViewById(R.id.textView_nama_listView_glide);
+        TextView textViewAlamat = (TextView) convertView.findViewById(R.id.textView_alamat_listView_glide);
+        textViewName.setText(daftarNama[position]);
+        textViewAlamat.setText(daftarAlamat[position]);
+        ImageView myImageView = (ImageView) convertView.findViewById(R.id.imageView_listView_glide);
+        convertView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // TODO Auto-generated method stub
+                Toast.makeText(context, daftarNama[position]+" : "+daftarAlamat[position], Toast.LENGTH_LONG).show();
+            }
+        });
 
-        View rowView;
-        rowView = inflater.inflate(R.layout.layout_listview_glide, null);
-        final ImageView myImageView;
-        myImageView = (ImageView) rowView.findViewById(R.id.imageView_listView_glide);
-
-        String url = daftarUrlFoto[position];
-
+        Log.i("URL FOTO",daftarUrlFoto[position]);
         Glide.with(context)
-                .load(url)
+                .load(daftarUrlFoto[position].trim())
                 .centerCrop()
                 .placeholder(R.mipmap.ic_launcher)
                 .crossFade()
                 .into(myImageView);
-
-        return rowView;
+        return convertView;
     }
 
-    public class Holder {
-        TextView textViewName;
-        TextView textViewAlamat;
-        ImageView img;
-    }
+    @Override
+    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 
+    }
 }
