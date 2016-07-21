@@ -6,6 +6,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.Toast;
 
 import com.triwayuprasetyo.mapretrofitglidesdp.retrofit.AnggotaService;
 
@@ -22,6 +23,7 @@ import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
 public class UploadImageActivity extends AppCompatActivity implements View.OnClickListener {
+    private static final int PICKFILE_RESULT_CODE = 42;
     private Button buttonUploadFile, buttonSelectFile;
 
     @Override
@@ -82,16 +84,32 @@ public class UploadImageActivity extends AppCompatActivity implements View.OnCli
             }
         });
     }
-    private static final int READ_REQUEST_CODE = 42;
 
     @Override
     public void onClick(View v) {
         if (v.getId() == buttonUploadFile.getId()) {
-            uploadFile();
+            //uploadFile();
         } else if (v.getId() == buttonSelectFile.getId()) {
             Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
             intent.setType("file/*");
-            startActivityForResult(intent, READ_REQUEST_CODE);
+            startActivityForResult(intent, PICKFILE_RESULT_CODE);
+        }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+// TODO Auto-generated method stub
+        Log.i("SDP UPLOAD : ", requestCode+" , "+resultCode);
+        switch (requestCode) {
+            case PICKFILE_RESULT_CODE:
+                if (resultCode == RESULT_OK) {
+                    String filePath = data.getData().getPath();
+                    //textFile.setText(FilePath);
+                    Log.i("SDP UPLOAD : ", filePath);
+                    //Toast.makeText("SDP UPLOAD : ", filePath, Toast.LENGTH_SHORT).show();
+                }
+                break;
+
         }
     }
 }
