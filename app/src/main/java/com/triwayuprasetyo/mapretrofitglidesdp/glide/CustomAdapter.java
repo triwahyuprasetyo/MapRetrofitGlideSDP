@@ -71,7 +71,7 @@ public class CustomAdapter extends BaseAdapter implements AdapterView.OnItemClic
         Glide.with(context)
                 .load(daftarUrlFoto[position].trim())
                 .centerCrop()
-                .placeholder(R.mipmap.loading)
+                .placeholder(R.mipmap.ic_launcher)
                 .crossFade()
                 .into(myImageView);
         return convertView;

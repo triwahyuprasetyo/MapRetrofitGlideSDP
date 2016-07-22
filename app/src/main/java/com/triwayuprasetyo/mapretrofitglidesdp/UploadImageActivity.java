@@ -1,7 +1,10 @@
 package com.triwayuprasetyo.mapretrofitglidesdp;
 
 import android.content.Intent;
+import android.database.Cursor;
+import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
@@ -23,7 +26,9 @@ import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
 public class UploadImageActivity extends AppCompatActivity implements View.OnClickListener {
-    private static final int PICKFILE_RESULT_CODE = 42;
+    private final int PICKFILE_RESULT_CODE = 42;
+    private final int SELECT_IMAGE_CODE = 43;
+    private final int EXTERNAL_CODE = 44;
     private Button buttonUploadFile, buttonSelectFile;
 
     @Override
@@ -38,7 +43,7 @@ public class UploadImageActivity extends AppCompatActivity implements View.OnCli
         buttonSelectFile.setOnClickListener(this);
     }
 
-    private void uploadFile() {
+    private void uploadFile(String uri) {
         // create upload service client
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl("http://triwahyuprasetyo.xyz/")
@@ -54,7 +59,8 @@ public class UploadImageActivity extends AppCompatActivity implements View.OnCli
         //String path = "/mnt/sdcard/" + filename;
 
         //Uri imageUri = Uri.parse("file:///mnt/sdcard/ayana_shahab.jpg");
-        File file = new File("mnt/sdcard/ayana_shahab.jpg");  //
+        //File file = new File("mnt/sdcard/ayana_shahab.jpg");
+        File file = new File(uri);
         // create RequestBody instance from file
         RequestBody requestFile =
                 RequestBody.create(MediaType.parse("multipart/form-data"), file);
@@ -90,26 +96,71 @@ public class UploadImageActivity extends AppCompatActivity implements View.OnCli
         if (v.getId() == buttonUploadFile.getId()) {
             //uploadFile();
         } else if (v.getId() == buttonSelectFile.getId()) {
-            Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
-            intent.setType("file/*");
-            startActivityForResult(intent, PICKFILE_RESULT_CODE);
+//            Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
+//            intent.setType("file/*");
+//            startActivityForResult(intent, PICKFILE_RESULT_CODE);
+
+            Intent intent = new Intent();
+            intent.setType("image/*");
+            intent.setAction(Intent.ACTION_GET_CONTENT);
+            startActivityForResult(Intent.createChooser(intent, "Select Picture"), SELECT_IMAGE_CODE);
+            startActivityForResult(intent, 1);
+
+//            Intent pickPhoto = new Intent(Intent.ACTION_PICK,
+//                    android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+//            startActivityForResult(pickPhoto, EXTERNAL_CODE);
         }
     }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 // TODO Auto-generated method stub
-        Log.i("SDP UPLOAD : ", requestCode+" , "+resultCode);
+        Log.i("SDP UPLOAD : ", requestCode + " , " + resultCode);
         switch (requestCode) {
             case PICKFILE_RESULT_CODE:
                 if (resultCode == RESULT_OK) {
                     String filePath = data.getData().getPath();
-                    //textFile.setText(FilePath);
-                    Log.i("SDP UPLOAD : ", filePath);
-                    //Toast.makeText("SDP UPLOAD : ", filePath, Toast.LENGTH_SHORT).show();
-                }
-                break;
 
+
+                    Uri selectedImageURI = data.getData();
+                    File imageFile = new File(getRealPathFromURI(selectedImageURI));
+                    Log.i("SDP UPLOAD p: ", imageFile.getPath());
+                }
+                //intent galery atau camera
+                break;
+            case SELECT_IMAGE_CODE:
+                if (resultCode == RESULT_OK) {
+                    Uri selectedImageURI = data.getData();
+                    File imageFile = new File(getRealPathFromURI(selectedImageURI));
+                    Log.i("SDP UPLOAD s: ", imageFile.getPath());
+                    //Toast.makeText(getApplicationContext(), "SDP UPLOAD : " + filePath, Toast.LENGTH_SHORT).show();
+                    //uploadFile(filePath);
+                }
+                //intent galery atau camera
+                break;
+            case EXTERNAL_CODE:
+                if (resultCode == RESULT_OK) {
+                    Uri selectedImageURI = data.getData();
+                    File imageFile = new File(getRealPathFromURI(selectedImageURI));
+                    Log.i("SDP UPLOAD e: ", imageFile.getPath());
+                }
+                //intent galery atau camera
+                break;
         }
     }
+
+    private String getRealPathFromURI(Uri contentURI) {
+        String result;
+        Cursor cursor = getContentResolver().query(contentURI, null, null, null, null);
+        if (cursor == null) { // Source is Dropbox or other similar local file path
+            result = contentURI.getPath();
+        } else {
+            cursor.moveToFirst();
+            int idx = cursor.getColumnIndex(MediaStore.Images.ImageColumns.DATA);
+            result = cursor.getString(idx);
+            cursor.close();
+        }
+        return result;
+    }
+
 }
