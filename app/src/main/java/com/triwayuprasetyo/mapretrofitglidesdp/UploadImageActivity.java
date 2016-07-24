@@ -2,6 +2,7 @@ package com.triwayuprasetyo.mapretrofitglidesdp;
 
 import android.content.Intent;
 import android.database.Cursor;
+import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
@@ -15,9 +16,11 @@ import android.widget.Button;
 import com.triwayuprasetyo.mapretrofitglidesdp.retrofit.AnggotaService;
 
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Random;
 
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
@@ -32,9 +35,11 @@ import retrofit2.converter.gson.GsonConverterFactory;
 public class UploadImageActivity extends AppCompatActivity implements View.OnClickListener {
     private static final int REQUEST_TAKE_PHOTO = 1;
     private final int PICKFILE_RESULT_CODE = 42;
-    private final int TAKE_PICTURE = 41;
+    private String imageFileName = "";
     private String mCurrentPhotoPath;
     private Button buttonUploadFile, buttonSelectFile, buttonCamera;
+    private String pictureImagePath = "";
+    private boolean upimg = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -76,7 +81,7 @@ public class UploadImageActivity extends AppCompatActivity implements View.OnCli
                 MultipartBody.Part.createFormData("fileToUpload", file.getName(), requestFile);
 
         // add another part within the multipart request
-        String descriptionString = "hello, this is description speaking";
+        String descriptionString = "hello description";
         RequestBody description =
                 RequestBody.create(
                         MediaType.parse("multipart/form-data"), descriptionString);
@@ -101,29 +106,88 @@ public class UploadImageActivity extends AppCompatActivity implements View.OnCli
     public void onClick(View v) {
         if (v.getId() == buttonUploadFile.getId()) {
             //uploadFile();
-            Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-
-            // start camera activity
-            startActivityForResult(intent, TAKE_PICTURE);
+            upimg = true;
+            Intent intent = new Intent();
+            intent.setType("image/*");
+            intent.setAction(Intent.ACTION_GET_CONTENT);
+            startActivityForResult(Intent.createChooser(intent, "Select Picture"), PICKFILE_RESULT_CODE);
         } else if (v.getId() == buttonSelectFile.getId()) {
-            //Semua file
+            //cara 1 --> file manager
 //            Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
 //            intent.setType("file/*");
 //            startActivityForResult(intent, PICKFILE_RESULT_CODE);
 
-            //gallery
+            //cara 2 --> gallery
 //            Intent pickPhoto = new Intent(Intent.ACTION_PICK,
 //                    android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
 //            startActivityForResult(pickPhoto, PICKFILE_RESULT_CODE);
 
+            //cara 3 --> file manager & gallery
             Intent intent = new Intent();
             intent.setType("image/*");
             intent.setAction(Intent.ACTION_GET_CONTENT);
             startActivityForResult(Intent.createChooser(intent, "Select Picture"), PICKFILE_RESULT_CODE);
         } else if (v.getId() == buttonCamera.getId()) {
             Log.i("SDP INTENT", "CAMERA");
-            dispatchTakePictureIntent();
+            //cara 1
+            //dispatchTakePictureIntent();
+
+            //cara 2
+            //takepic();
+
+            //cara 3
+            openBackCamera();
         }
+    }
+
+    private void takepic() {
+        Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        startActivityForResult(takePictureIntent, REQUEST_TAKE_PHOTO);
+    }
+
+    private void SaveImage(Bitmap finalBitmap) {
+        String root = Environment.getExternalStorageDirectory().toString();
+        File myDir = new File(root + "/saved_images");
+        myDir.mkdirs();
+        Random generator = new Random();
+        int n = 10000;
+        n = generator.nextInt(n);
+        String fname = "Image-" + n + ".jpg";
+        File file = new File(myDir, fname);
+        if (file.exists()) file.delete();
+        try {
+            FileOutputStream out = new FileOutputStream(file);
+            finalBitmap.compress(Bitmap.CompressFormat.JPEG, 100, out);
+            out.flush();
+            out.close();
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void openBackCamera() {
+        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
+        imageFileName = timeStamp + ".jpg";
+        File storageDir = Environment.getExternalStoragePublicDirectory(
+                Environment.DIRECTORY_PICTURES);
+        pictureImagePath = storageDir.getAbsolutePath() + "/" + imageFileName;
+        File file = new File(pictureImagePath);
+        Uri outputFileUri = Uri.fromFile(file);
+        Intent cameraIntent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
+        // Ensure that there's a camera activity to handle the intent
+        if (cameraIntent.resolveActivity(getPackageManager()) != null) {
+            cameraIntent.putExtra(MediaStore.EXTRA_OUTPUT, outputFileUri);
+            startActivityForResult(cameraIntent, REQUEST_TAKE_PHOTO);
+        }
+    }
+
+    private void galleryAddPic() {
+        Intent mediaScanIntent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
+        File f = new File("/storage/emulated/0/Pictures/" + imageFileName);
+        Uri contentUri = Uri.fromFile(f);
+        mediaScanIntent.setData(contentUri);
+        this.sendBroadcast(mediaScanIntent);
     }
 
     @Override
@@ -138,24 +202,23 @@ public class UploadImageActivity extends AppCompatActivity implements View.OnCli
                         Log.i("SDP UPLOAD", "Gagal Ambil Path");
                     } else {
                         Log.i("SDP UPLOAD", path);
-                    }
-                }
-                break;
-            case TAKE_PICTURE:
-                if (resultCode == RESULT_OK) {
-                    Uri selectedImageURI = data.getData();
-                    File imageFile = new File(getRealPathFromURI(selectedImageURI));
-                    String path = imageFile.getPath();
-                    if (path.contains("Exception")) {
-                        Log.i("SDP UPLOAD", "Gagal Ambil Path");
-                    } else {
-                        Log.i("SDP UPLOAD", path);
+                        if (upimg == true) {
+                            upimg = false;
+                            uploadFile(path);
+                        }
                     }
                 }
                 break;
             case REQUEST_TAKE_PHOTO:
                 if (resultCode == RESULT_OK) {
                     Log.i("SDP SUCCESSS", "SUCCESS TAKE POTO");
+                    galleryAddPic();
+                    Log.i("SDP Path", "/storage/emulated/0/Pictures/" + imageFileName);
+
+//                    cara 2 --> simpan image tp dikompress
+//                    Bundle extras = data.getExtras();
+//                    Bitmap bitMap = (Bitmap) extras.get("data");
+//                    SaveImage(bitMap);
                 }
                 break;
         }
