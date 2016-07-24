@@ -11,18 +11,31 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
+
+import com.triwayuprasetyo.mapretrofitglidesdp.retrofit.AnggotaService;
+import com.triwayuprasetyo.mapretrofitglidesdp.retrofit.AnggotaWrapper;
 
 import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+import okhttp3.MediaType;
+import okhttp3.MultipartBody;
+import okhttp3.RequestBody;
+import okhttp3.ResponseBody;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
+
 public class TambahAnggotaActivity extends AppCompatActivity implements View.OnClickListener {
-    private static final int REQUEST_TAKE_PHOTO = 41;
+    private final int REQUEST_TAKE_PHOTO = 41;
     private final int PICKFILE_RESULT_CODE = 42;
     private EditText editTextNama, editTextAlamat, editTextUsername, editTextPassword, editTextPath;
     private Button buttonSave, buttonCamera, buttonBrowse;
-    private String imageFileName = "";
-    private String pictureImagePath = "";
+    private String pictureImagePath;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,6 +60,20 @@ public class TambahAnggotaActivity extends AppCompatActivity implements View.OnC
     public void onClick(View v) {
         if (v.getId() == buttonSave.getId()) {
             Log.i("TAMBAH ANGGOTA", "SAVE");
+            String nama = editTextNama.getText().toString().trim();
+            String alamat = editTextAlamat.getText().toString().trim();
+            String username = editTextUsername.getText().toString().trim();
+            String password = editTextPassword.getText().toString().trim();
+            String path = editTextPath.getText().toString().trim();
+            if (!nama.equals("") && !alamat.equals("") && !username.equals("") && !password.equals("") && !path.equals("")) {
+                if (path.endsWith(".jpg") || path.endsWith(".png")) {
+                    File imageFile = new File(path);
+                    Log.i("SDP Name", imageFile.getName());
+                    //retrofit2SaveAnggota(nama, alamat, username, password, imageFile.getName());
+                    //uploadFile(path);
+                    finish();
+                }
+            }
         } else if (v.getId() == buttonCamera.getId()) {
             Log.i("TAMBAH ANGGOTA", "CAMERA");
             openBackCamera();
@@ -59,9 +86,39 @@ public class TambahAnggotaActivity extends AppCompatActivity implements View.OnC
         }
     }
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        switch (requestCode) {
+            case PICKFILE_RESULT_CODE:
+                if (resultCode == RESULT_OK) {
+                    Uri selectedImageURI = data.getData();
+                    File imageFile = new File(getRealPathFromURI(selectedImageURI));
+                    String path = imageFile.getPath();
+                    if (path.contains("Exception")) {
+                        Log.i("SDP UPLOAD", "Gagal Ambil Path");
+                    } else {
+                        Log.i("SDP UPLOAD", path);
+                        editTextPath.setText(path);
+                        Log.i("SDP Name", imageFile.getName());
+                    }
+                }
+                break;
+            case REQUEST_TAKE_PHOTO:
+                if (resultCode == RESULT_OK) {
+                    Log.i("SDP SUCCESSS", "SUCCESS TAKE POTO");
+                    Log.i("SDP Path", pictureImagePath);
+                    editTextPath.setText(pictureImagePath);
+                    galleryAddPic();
+                    File imageFile = new File(pictureImagePath);
+                    Log.i("SDP Name", imageFile.getName());
+                }
+                break;
+        }
+    }
+
     private void openBackCamera() {
         String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
-        imageFileName = timeStamp + ".jpg";
+        String imageFileName = timeStamp + ".jpg";
         File storageDir = Environment.getExternalStoragePublicDirectory(
                 Environment.DIRECTORY_PICTURES);
         pictureImagePath = storageDir.getAbsolutePath() + "/" + imageFileName;
@@ -77,7 +134,7 @@ public class TambahAnggotaActivity extends AppCompatActivity implements View.OnC
 
     private void galleryAddPic() {
         Intent mediaScanIntent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
-        File f = new File("/storage/emulated/0/Pictures/" + imageFileName);
+        File f = new File(pictureImagePath);
         Uri contentUri = Uri.fromFile(f);
         mediaScanIntent.setData(contentUri);
         this.sendBroadcast(mediaScanIntent);
@@ -105,30 +162,77 @@ public class TambahAnggotaActivity extends AppCompatActivity implements View.OnC
         return result;
     }
 
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        switch (requestCode) {
-            case PICKFILE_RESULT_CODE:
-                if (resultCode == RESULT_OK) {
-                    Uri selectedImageURI = data.getData();
-                    File imageFile = new File(getRealPathFromURI(selectedImageURI));
-                    String path = imageFile.getPath();
-                    if (path.contains("Exception")) {
-                        Log.i("SDP UPLOAD", "Gagal Ambil Path");
-                    } else {
-                        Log.i("SDP UPLOAD", path);
-                        editTextPath.setText(path);
-                    }
-                }
-                break;
-            case REQUEST_TAKE_PHOTO:
-                if (resultCode == RESULT_OK) {
-                    Log.i("SDP SUCCESSS", "SUCCESS TAKE POTO");
-                    Log.i("SDP Path", "/storage/emulated/0/Pictures/" + imageFileName);
-                    editTextPath.setText("/storage/emulated/0/Pictures/" + imageFileName);
-                    galleryAddPic();
-                }
-                break;
-        }
+    private void uploadFile(String uri) {
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl("http://triwahyuprasetyo.xyz/")
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
+
+        AnggotaService service = retrofit.create(AnggotaService.class);
+        File file = new File(uri);
+        RequestBody requestFile =
+                RequestBody.create(MediaType.parse("multipart/form-data"), file);
+        MultipartBody.Part body =
+                MultipartBody.Part.createFormData("fileToUpload", file.getName(), requestFile);
+        String descriptionString = "hello description";
+        RequestBody description =
+                RequestBody.create(
+                        MediaType.parse("multipart/form-data"), descriptionString);
+        Call<ResponseBody> call = service.upload(description, body);
+        call.enqueue(new Callback<ResponseBody>() {
+            @Override
+            public void onResponse(Call<ResponseBody> call,
+                                   Response<ResponseBody> response) {
+                Log.v("Upload", "success");
+            }
+
+            @Override
+            public void onFailure(Call<ResponseBody> call, Throwable t) {
+                Log.e("Upload error:", t.getMessage());
+            }
+        });
+    }
+
+    private void retrofit2SaveAnggota(String nama, String alamat, String username, String password, String foto) {
+        AnggotaWrapper.Anggota a = new AnggotaWrapper.Anggota();
+        a.setNama(nama);
+        a.setAlamat(alamat);
+        a.setUsername(username);
+        a.setPassword(password);
+        a.setFoto(foto);
+
+        Log.d("SDP", "Anggota :: " + a.getNama());
+        Log.d("SDP", "Anggota :: " + a.getAlamat());
+        Log.d("SDP", "Anggota :: " + a.getUsername());
+        Log.d("SDP", "Anggota :: " + a.getPassword());
+        Log.d("SDP", "Anggota :: " + a.getFoto());
+
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl("http://triwahyuprasetyo.xyz/")
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
+
+        AnggotaService service = retrofit.create(AnggotaService.class);
+
+        Call<Void> call = service.tambahPostAnggota(a.getNama(),
+                a.getUsername(),
+                a.getPassword(),
+                a.getAlamat(),
+                a.getLatitude(),
+                a.getLongitude(),
+                a.getFoto());
+        call.enqueue(new Callback<Void>() {
+                         @Override
+                         public void onResponse(Call<Void> call, Response<Void> response) {
+                             Toast.makeText(getApplicationContext(), "Add Success : " + response.message(), Toast.LENGTH_SHORT).show();
+                         }
+
+                         @Override
+                         public void onFailure(Call<Void> call, Throwable t) {
+                             Toast.makeText(getApplicationContext(), "Add Fail", Toast.LENGTH_SHORT).show();
+                             Log.i("SDP ERROR", t.getMessage());
+                         }
+                     }
+        );
     }
 }

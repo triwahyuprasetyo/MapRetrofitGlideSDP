@@ -12,10 +12,30 @@
             android:layout_height="match_parent"
             android:orientation="vertical">
 
-            <ListView
-                android:id="@+id/listview_glide"
+            <LinearLayout
+                android:orientation="vertical"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent" />
+                android:layout_weight="1"
+                android:layout_height="match_parent">
+
+                <ListView
+                    android:id="@+id/listview_glide"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:orientation="vertical"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <Button
+                    android:text="Tambah Anggota"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/button_tambah_glide" />
+            </LinearLayout>
+
         </LinearLayout>
 
 </android.support.constraint.ConstraintLayout>

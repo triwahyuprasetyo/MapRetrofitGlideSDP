@@ -1,8 +1,11 @@
 package com.triwayuprasetyo.mapretrofitglidesdp;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.View;
+import android.widget.Button;
 import android.widget.ListView;
 import android.widget.Toast;
 
@@ -16,10 +19,11 @@ import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
-public class GlideActivity extends AppCompatActivity {
+public class GlideActivity extends AppCompatActivity implements View.OnClickListener {
     private String[] daftarNama, daftarAlamat, daftarUrlFoto;
     private String urlImages;
     private ListView listViewGlide;
+    private Button tambahAnggota;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -30,8 +34,8 @@ public class GlideActivity extends AppCompatActivity {
         setTitle("Glide & Retrofit");
         urlImages = "http://triwahyuprasetyo.xyz/images/";
         listViewGlide = (ListView) findViewById(R.id.listview_glide);
-
-
+        tambahAnggota = (Button) findViewById(R.id.button_tambah_glide);
+        tambahAnggota.setOnClickListener(this);
     }
 
     @Override
@@ -81,5 +85,13 @@ public class GlideActivity extends AppCompatActivity {
                 Toast.makeText(getApplicationContext(), "Fail Retrieve", Toast.LENGTH_SHORT).show();
             }
         });
+    }
+
+    @Override
+    public void onClick(View v) {
+        if (v.getId() == tambahAnggota.getId()) {
+            Intent i = new Intent(getApplicationContext(), TambahAnggotaActivity.class);
+            startActivity(i);
+        }
     }
 }

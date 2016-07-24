@@ -53,16 +53,18 @@
         <activity android:name=".AddAnggotaActivity" />
         <activity android:name=".Retrofit1Activity" />
         <activity android:name=".Retrofit2Activity" />
-        <activity android:name=".GlideActivity" />
-        <activity android:name=".UploadImageActivity">
-
-        </activity>
-        <activity android:name=".TambahAnggotaActivity">
+        <activity android:name=".GlideActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+        </activity>
+        <activity android:name=".UploadImageActivity">
+
+        </activity>
+        <activity android:name=".TambahAnggotaActivity">
+
         </activity>
     </application>
 
