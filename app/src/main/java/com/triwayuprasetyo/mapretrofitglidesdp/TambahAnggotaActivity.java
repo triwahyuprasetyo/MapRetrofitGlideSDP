@@ -36,6 +36,8 @@ public class TambahAnggotaActivity extends AppCompatActivity implements View.OnC
     private EditText editTextNama, editTextAlamat, editTextUsername, editTextPassword, editTextPath;
     private Button buttonSave, buttonCamera, buttonBrowse;
     private String pictureImagePath;
+    private boolean uploadDone = false;
+    private boolean postDone = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -70,8 +72,8 @@ public class TambahAnggotaActivity extends AppCompatActivity implements View.OnC
                     File imageFile = new File(path);
                     Log.i("SDP Name", imageFile.getName());
                     //retrofit2SaveAnggota(nama, alamat, username, password, imageFile.getName());
-                    //uploadFile(path);
-                    finish();
+                    uploadFile(path, nama, alamat, username, password, imageFile.getName());
+
                 }
             }
         } else if (v.getId() == buttonCamera.getId()) {
@@ -162,7 +164,13 @@ public class TambahAnggotaActivity extends AppCompatActivity implements View.OnC
         return result;
     }
 
-    private void uploadFile(String uri) {
+    private void callFinish() {
+        finish();
+        uploadDone = false;
+        postDone = false;
+    }
+
+    private void uploadFile(String uri, String nama, String alamat, String username, String password, String foto) {
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl("http://triwahyuprasetyo.xyz/")
                 .addConverterFactory(GsonConverterFactory.create())
@@ -174,23 +182,32 @@ public class TambahAnggotaActivity extends AppCompatActivity implements View.OnC
                 RequestBody.create(MediaType.parse("multipart/form-data"), file);
         MultipartBody.Part body =
                 MultipartBody.Part.createFormData("fileToUpload", file.getName(), requestFile);
-        String descriptionString = "hello description";
+        String descriptionString = nama+":"+username+":"+password+":"+alamat+":"+""+":"+""+":"+foto;
         RequestBody description =
                 RequestBody.create(
                         MediaType.parse("multipart/form-data"), descriptionString);
-        Call<ResponseBody> call = service.upload(description, body);
+        Call<ResponseBody> call = service.upload2(description, body);
         call.enqueue(new Callback<ResponseBody>() {
-            @Override
-            public void onResponse(Call<ResponseBody> call,
-                                   Response<ResponseBody> response) {
-                Log.v("Upload", "success");
-            }
+                         @Override
+                         public void onResponse(Call<ResponseBody> call,
+                                                Response<ResponseBody> response) {
+                             Log.v("Upload", "success");
+                             uploadDone = true;
+                             //if (uploadDone == true && postDone == true) {
+                                 callFinish();
+                             //}
+                         }
 
-            @Override
-            public void onFailure(Call<ResponseBody> call, Throwable t) {
-                Log.e("Upload error:", t.getMessage());
-            }
-        });
+                         @Override
+                         public void onFailure(Call<ResponseBody> call, Throwable t) {
+                             Log.e("Upload error:", t.getMessage());
+                             uploadDone = true;
+                             if (uploadDone == true && postDone == true) {
+                                 callFinish();
+                             }
+                         }
+                     }
+        );
     }
 
     private void retrofit2SaveAnggota(String nama, String alamat, String username, String password, String foto) {
@@ -225,12 +242,20 @@ public class TambahAnggotaActivity extends AppCompatActivity implements View.OnC
                          @Override
                          public void onResponse(Call<Void> call, Response<Void> response) {
                              Toast.makeText(getApplicationContext(), "Add Success : " + response.message(), Toast.LENGTH_SHORT).show();
+                             postDone = true;
+                             if (uploadDone == true && postDone == true) {
+                                 callFinish();
+                             }
                          }
 
                          @Override
                          public void onFailure(Call<Void> call, Throwable t) {
                              Toast.makeText(getApplicationContext(), "Add Fail", Toast.LENGTH_SHORT).show();
                              Log.i("SDP ERROR", t.getMessage());
+                             postDone = true;
+                             if (uploadDone == true && postDone == true) {
+                                 callFinish();
+                             }
                          }
                      }
         );

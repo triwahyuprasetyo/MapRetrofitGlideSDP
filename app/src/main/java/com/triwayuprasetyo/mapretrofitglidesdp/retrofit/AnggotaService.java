@@ -32,4 +32,9 @@ public interface AnggotaService {
     @POST("uploadImage.php")
     Call<ResponseBody> upload(@Part("description") RequestBody description,
                               @Part MultipartBody.Part file);
+
+    @Multipart
+    @POST("tambahanggota.php")
+    Call<ResponseBody> upload2(@Part("description") RequestBody description,
+                              @Part MultipartBody.Part file);
 }
