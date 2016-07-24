@@ -9,6 +9,9 @@
     <string name="textview_alamat_addanggota">Alamat</string>
     <string name="textview_username_addanggota">Username</string>
     <string name="textview_password_addanggota">Password</string>
+    <string name="textview_path_tambahanggota">Path Image</string>
     <string name="button_save_addanggota">Save</string>
+    <string name="button_camera_tambahAnggota">Camera</string>
+    <string name="button_browse_tambahAnggota">Browse</string>
     <string name="imageView_contentDescription">image from glide</string>
 </resources>
