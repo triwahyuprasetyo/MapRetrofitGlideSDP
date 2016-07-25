@@ -48,17 +48,19 @@
 
         <activity
             android:name=".MapsActivity"
-            android:label="@string/title_activity_maps"></activity>
-        <activity android:name=".AnggotaActivity"></activity>
-        <activity android:name=".AddAnggotaActivity" />
-        <activity android:name=".Retrofit1Activity" />
-        <activity android:name=".Retrofit2Activity" />
-        <activity android:name=".GlideActivity">
+            android:label="@string/title_activity_maps">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+        </activity>
+        <activity android:name=".AnggotaActivity"></activity>
+        <activity android:name=".AddAnggotaActivity" />
+        <activity android:name=".Retrofit1Activity" />
+        <activity android:name=".Retrofit2Activity" />
+        <activity android:name=".GlideActivity">
+
         </activity>
         <activity android:name=".UploadImageActivity">
 
