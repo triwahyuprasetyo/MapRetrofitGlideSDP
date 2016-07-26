@@ -1,14 +1,14 @@
 package com.triwayuprasetyo.mapretrofitglidesdp;
 
-import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
+import android.support.v4.app.FragmentActivity;
+import android.util.Log;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
 public class MapsActivity extends FragmentActivity implements OnMapReadyCallback {
@@ -57,5 +57,16 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 //
 //            }
 //        });
+
+
+        mMap.setOnMapLongClickListener(new GoogleMap.OnMapLongClickListener() {
+            @Override
+            public void onMapLongClick(LatLng latLng) {
+                double latitude = latLng.latitude;
+                double longitude = latLng.longitude;
+                Log.i("GPS",latitude+"");
+                Log.i("GPS",longitude+"");
+            }
+        });
     }
 }
