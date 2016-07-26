@@ -3,6 +3,7 @@ package com.triwayuprasetyo.mapretrofitglidesdp;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -64,8 +65,9 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             public void onMapLongClick(LatLng latLng) {
                 double latitude = latLng.latitude;
                 double longitude = latLng.longitude;
-                Log.i("GPS",latitude+"");
-                Log.i("GPS",longitude+"");
+                Log.i("GPS", latitude + "");
+                Log.i("GPS", longitude + "");
+                Toast.makeText(getApplicationContext(), latitude + " - " + longitude, Toast.LENGTH_SHORT).show();
             }
         });
     }
