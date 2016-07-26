@@ -7,4 +7,16 @@
     android:layout_height="match_parent"
     tools:context="com.triwayuprasetyo.mapretrofitglidesdp.VolleyActivity">
 
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <Button
+            android:text="Volley Get Anggota"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/button_getAnggota_volley" />
+    </LinearLayout>
+
 </android.support.constraint.ConstraintLayout>
