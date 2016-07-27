@@ -1,8 +1,12 @@
 package com.triwayuprasetyo.mapretrofitglidesdp;
 
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
+import android.support.v7.app.AlertDialog;
+import android.text.InputType;
 import android.util.Log;
+import android.widget.EditText;
 import android.widget.Toast;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -12,7 +16,7 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 
-public class MapsActivity extends FragmentActivity implements OnMapReadyCallback {
+public class MapsActivity extends FragmentActivity implements OnMapReadyCallback, GoogleMap.OnMapLongClickListener {
 
     private GoogleMap mMap;
 
@@ -39,38 +43,50 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
-        // Enabling MyLocation Layer of Google Map
-        //mMap.setMyLocationEnabled(true);
+        mMap.setOnMapLongClickListener(this);
 
-        // Add a marker in Sydney and move the camera
         LatLng uns = new LatLng(-7.561577, 110.856582);
         mMap.addMarker(new MarkerOptions().position(uns).title("Univ 11 Maret"));
         mMap.moveCamera(CameraUpdateFactory.newLatLng(uns));
-//        mMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
-//            @Override
-//            public boolean onMarkerClick(Marker marker) {
-//
-//                return false;
-//            }
-//        });
-//
-//        mMap.setOnMapLongClickListener(new GoogleMap.OnMapLongClickListener() {
-//            @Override
-//            public void onMapLongClick(LatLng latLng) {
-//
-//            }
-//        });
+        mMap.animateCamera(CameraUpdateFactory.zoomTo(17));
 
+    }
 
-        mMap.setOnMapLongClickListener(new GoogleMap.OnMapLongClickListener() {
+    @Override
+    public void onMapLongClick(LatLng latLng) {
+        double latitude = latLng.latitude;
+        double longitude = latLng.longitude;
+        Log.i("Latitude", latitude + "");
+        Log.i("Longitude", longitude + "");
+        Toast.makeText(getApplicationContext(), latitude + " - " + longitude, Toast.LENGTH_SHORT).show();
+        pinMarker(latLng);
+    }
+
+    private void pinMarker(final LatLng latLng) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("Type Location Name");
+        final EditText input = new EditText(this);
+        input.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_NORMAL);
+        builder.setView(input);
+        builder.setPositiveButton("Add Marker", new DialogInterface.OnClickListener() {
             @Override
-            public void onMapLongClick(LatLng latLng) {
-                double latitude = latLng.latitude;
-                double longitude = latLng.longitude;
-                Log.i("GPS", latitude + "");
-                Log.i("GPS", longitude + "");
-                Toast.makeText(getApplicationContext(), latitude + " - " + longitude, Toast.LENGTH_SHORT).show();
+            public void onClick(DialogInterface dialog, int which) {
+                String nameLocation = input.getText().toString();
+                if (!nameLocation.trim().equals("")) {
+                    mMap.addMarker(new MarkerOptions().title(nameLocation).position(latLng));
+                    Log.i("MAP", "Add Marker Success");
+                } else {
+                    Log.i("MAP", "Marker Not Added");
+                }
             }
         });
+        builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                Log.i("MAP", "Cancel Add Marker");
+            }
+        });
+
+        builder.show();
     }
 }
