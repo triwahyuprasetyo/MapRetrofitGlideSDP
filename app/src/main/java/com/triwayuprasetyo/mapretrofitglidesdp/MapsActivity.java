@@ -1,7 +1,11 @@
 package com.triwayuprasetyo.mapretrofitglidesdp;
 
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.pm.PackageManager;
+import android.location.Location;
+import android.location.LocationListener;
+import android.location.LocationManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -14,23 +18,24 @@ import android.util.Log;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.triwayuprasetyo.mapretrofitglidesdp.gmap.PermissionUtils;
 
 public class MapsActivity extends FragmentActivity implements OnMapReadyCallback,
         GoogleMap.OnMapLongClickListener, GoogleMap.OnMyLocationButtonClickListener,
-        ActivityCompat.OnRequestPermissionsResultCallback {
-
+        ActivityCompat.OnRequestPermissionsResultCallback, LocationListener {
     /**
      * Request code for location permission request.
      *
      * @see #onRequestPermissionsResult(int, String[], int[])
      */
     private static final int LOCATION_PERMISSION_REQUEST_CODE = 1;
+    protected LocationManager locationManager;
+    protected LocationListener locationListener;
     private GoogleMap mMap;
     /**
      * Flag indicating whether a requested permission has been denied after returning in
@@ -101,6 +106,17 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             Log.i("Permission Location", "NOT GRANTED");
         }
      */
+        locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+        if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this,
+                android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            // Permission to access the location is missing.
+            PermissionUtils.requestPermission(this, LOCATION_PERMISSION_REQUEST_CODE,
+                    android.Manifest.permission.ACCESS_FINE_LOCATION, true);
+            Log.i("LOCATION MANAGER", "Permission to access the location is missing");
+        } else if (locationManager != null) {
+            locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, this);
+            Log.i("LOCATION  MANAGER", "ENABLE");
+        }
 
     }
 
@@ -151,15 +167,14 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             // Permission to access the location is missing.
             PermissionUtils.requestPermission(this, LOCATION_PERMISSION_REQUEST_CODE,
                     android.Manifest.permission.ACCESS_FINE_LOCATION, true);
-            Log.i("MAP LOCATION","Permission to access the location is missing");
+            Log.i("MAP LOCATION", "Permission to access the location is missing");
         } else if (mMap != null) {
             // Access to the location has been granted to the app.
             mMap.setMyLocationEnabled(true);
-            
-            Log.i("MAP LOCATION","ENABLE");
+
+            Log.i("MAP LOCATION", "ENABLE");
         }
     }
-
 
 
     @Override
@@ -179,11 +194,11 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
         if (PermissionUtils.isPermissionGranted(permissions, grantResults,
                 android.Manifest.permission.ACCESS_FINE_LOCATION)) {
-            Log.i("MAP Permission","Granted");
+            Log.i("MAP Permission", "Granted");
             // Enable the my location layer if the permission has been granted.
             enableMyLocation();
         } else {
-            Log.i("MAP Permission","Not Granted");
+            Log.i("MAP Permission", "Not Granted");
             // Display the missing permission error dialog when the fragments resume.
             mPermissionDenied = true;
         }
@@ -205,5 +220,27 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private void showMissingPermissionError() {
         PermissionUtils.PermissionDeniedDialog
                 .newInstance(true).show(getSupportFragmentManager(), "dialog");
+    }
+
+    @Override
+    public void onLocationChanged(Location location) {
+        Log.i("LOCATION", "FOUND");
+        Log.i("Latitude", location.getLatitude() + "");
+        Log.i("Longitude", location.getLongitude() + "");
+    }
+
+    @Override
+    public void onStatusChanged(String provider, int status, Bundle extras) {
+        Log.i("StatusChanged", "" + status);
+    }
+
+    @Override
+    public void onProviderEnabled(String provider) {
+        Log.i("Provider", "Enabled");
+    }
+
+    @Override
+    public void onProviderDisabled(String provider) {
+        Log.i("Provider", "Disabled");
     }
 }

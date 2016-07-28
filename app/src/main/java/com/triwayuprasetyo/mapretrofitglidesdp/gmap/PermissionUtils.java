@@ -1,4 +1,4 @@
-package com.triwayuprasetyo.mapretrofitglidesdp;
+package com.triwayuprasetyo.mapretrofitglidesdp.gmap;
 
 /**
  * Created by why on 7/27/16.
@@ -11,8 +11,10 @@ import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.DialogFragment;
-import android.support.v7.app.AppCompatActivity;
 import android.widget.Toast;
+
+import com.triwayuprasetyo.mapretrofitglidesdp.MapsActivity;
+import com.triwayuprasetyo.mapretrofitglidesdp.R;
 
 /**
  * Utility class for access to runtime permissions.
