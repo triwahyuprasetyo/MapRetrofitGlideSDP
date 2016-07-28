@@ -85,22 +85,50 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         }
 
         locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+//
+//        if (locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
+//            // Call your Alert message
+//            Log.i("GPS_PROVIDER", "ENABLE");
+//
+//            mMap.setOnMyLocationButtonClickListener(this);
+//            enableMyLocation();
+//            findLocationSingleRequestGPS();
+//        }else {
+//            Log.i("GPS_PROVIDER", "DISABLE");
+//            String locationProviders = Settings.Secure.getString(getContentResolver(), Settings.Secure.LOCATION_PROVIDERS_ALLOWED);
+//            if (locationProviders == null || locationProviders.equals("")) {
+////                startActivity(new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS));
+//                buildAlertMessageNoGps();
+//            }
+//        }
 
-        if (locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
-            // Call your Alert message
-            Log.i("GPS_PROVIDER", "ENABLE");
-
+        if (locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER)) {
+            Log.i("NETWORK_PROVIDER", "ENABLE");
             mMap.setOnMyLocationButtonClickListener(this);
             enableMyLocation();
-            findLocationSingleRequest();
-        } else {
-            Log.i("GPS_PROVIDER", "DISABLE");
-            String locationProviders = Settings.Secure.getString(getContentResolver(), Settings.Secure.LOCATION_PROVIDERS_ALLOWED);
-            if (locationProviders == null || locationProviders.equals("")) {
-//                startActivity(new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS));
-                buildAlertMessageNoGps();
-            }
+            findLocationSingleRequestNetwork();
+        }else{
+            Log.i("NETWORK_PROVIDER", "DISABLE");
+            buildAlertMessageNoNetwork();
         }
+    }
+
+    private void buildAlertMessageNoNetwork() {
+        final AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setMessage("Your Network seems to be disabled, do you want to enable it?")
+                .setCancelable(false)
+                .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                    public void onClick(@SuppressWarnings("unused") final DialogInterface dialog, @SuppressWarnings("unused") final int id) {
+                        startActivity(new Intent(Settings.ACTION_WIFI_SETTINGS));
+                    }
+                })
+                .setNegativeButton("No", new DialogInterface.OnClickListener() {
+                    public void onClick(final DialogInterface dialog, @SuppressWarnings("unused") final int id) {
+                        dialog.cancel();
+                    }
+                });
+        final AlertDialog alert = builder.create();
+        alert.show();
     }
 
     private void buildAlertMessageNoGps() {
@@ -121,17 +149,31 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         alert.show();
     }
 
-    private void findLocationSingleRequest() {
+    private void findLocationSingleRequestGPS() {
         if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this,
                 android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             // Permission to access the location is missing.
             PermissionUtils.requestPermission(this, LOCATION_PERMISSION_REQUEST_CODE,
                     android.Manifest.permission.ACCESS_FINE_LOCATION, true);
-            Log.i("LOCATION MANAGER", "Permission to access the location is missing");
+            Log.i("LOCATION MANAGER GPS", "Permission to access the location is missing");
         } else if (locationManager != null) {
 //            locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, this);
-            locationManager.requestSingleUpdate(LocationManager.GPS_PROVIDER, this, null);
-            Log.i("LOCATION  MANAGER", "ENABLE");
+            locationManager.requestSingleUpdate(LocationManager.NETWORK_PROVIDER, this, null);
+            Log.i("LOCATION  MANAGER GPS", "ENABLE");
+        }
+    }
+
+    private void findLocationSingleRequestNetwork() {
+        if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this,
+                android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            // Permission to access the location is missing.
+            PermissionUtils.requestPermission(this, LOCATION_PERMISSION_REQUEST_CODE,
+                    android.Manifest.permission.ACCESS_FINE_LOCATION, true);
+            Log.i("LOCATION MANAGER NET", "Permission to access the location is missing");
+        } else if (locationManager != null) {
+//            locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, this);
+            locationManager.requestSingleUpdate(LocationManager.NETWORK_PROVIDER, this, null);
+            Log.i("LOCATION  MANAGER NET", "ENABLE");
         }
     }
 
