@@ -85,23 +85,24 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         }
 
         locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-//
-//        if (locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
-//            // Call your Alert message
-//            Log.i("GPS_PROVIDER", "ENABLE");
-//
-//            mMap.setOnMyLocationButtonClickListener(this);
-//            enableMyLocation();
-//            findLocationSingleRequestGPS();
-//        }else {
-//            Log.i("GPS_PROVIDER", "DISABLE");
-//            String locationProviders = Settings.Secure.getString(getContentResolver(), Settings.Secure.LOCATION_PROVIDERS_ALLOWED);
-//            if (locationProviders == null || locationProviders.equals("")) {
-////                startActivity(new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS));
-//                buildAlertMessageNoGps();
-//            }
-//        }
 
+        if (locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
+            // Call your Alert message
+            Log.i("GPS_PROVIDER", "ENABLE");
+
+            mMap.setOnMyLocationButtonClickListener(this);
+            enableMyLocation();
+            findLocationSingleRequestGPS();
+        }else {
+            Log.i("GPS_PROVIDER", "DISABLE");
+            String locationProviders = Settings.Secure.getString(getContentResolver(), Settings.Secure.LOCATION_PROVIDERS_ALLOWED);
+            if (locationProviders == null || locationProviders.equals("")) {
+//                startActivity(new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS));
+                buildAlertMessageNoGps();
+            }
+        }
+
+/*
         if (locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER)) {
             Log.i("NETWORK_PROVIDER", "ENABLE");
             mMap.setOnMyLocationButtonClickListener(this);
@@ -111,6 +112,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             Log.i("NETWORK_PROVIDER", "DISABLE");
             buildAlertMessageNoNetwork();
         }
+ */
     }
 
     private void buildAlertMessageNoNetwork() {
@@ -158,7 +160,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             Log.i("LOCATION MANAGER GPS", "Permission to access the location is missing");
         } else if (locationManager != null) {
 //            locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, this);
-            locationManager.requestSingleUpdate(LocationManager.NETWORK_PROVIDER, this, null);
+            locationManager.requestSingleUpdate(LocationManager.GPS_PROVIDER, this, null);
             Log.i("LOCATION  MANAGER GPS", "ENABLE");
         }
     }

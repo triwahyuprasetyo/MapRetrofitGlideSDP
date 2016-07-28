@@ -5,7 +5,6 @@ import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
@@ -15,15 +14,35 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 
+import com.android.volley.Request;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonObjectRequest;
 import com.triwayuprasetyo.mapretrofitglidesdp.process.GlobalConst;
-import com.triwayuprasetyo.mapretrofitglidesdp.process.ServiceSample;
+import com.triwayuprasetyo.mapretrofitglidesdp.volley.VolleySingleton;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 public class VolleyActivity extends AppCompatActivity implements View.OnClickListener {
 
     private static final int ID_NOTIFICATION = 1;
+    static VolleyActivity va;
+    private static BroadcastReceiver getProcessStatus = new BroadcastReceiver() {
+
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            Bundle extras = intent.getExtras();
+            if (extras != null) {
+                final String message = extras.getString(GlobalConst.ID_RESULT_FROM_OTHER_PROCESS);
+                Log.i("SDP NOTIFICATION", "");
+                va.generateNotification(message);
+            }
+        }
+    };
     private Button buttonGetAnggota;
     private String[] daftarId, daftarNama, daftarAlamat, daftarUsername, daftarPassword, daftarLatitude, daftarLongitude, daftarFoto;
-    static VolleyActivity va;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,75 +51,62 @@ public class VolleyActivity extends AppCompatActivity implements View.OnClickLis
         buttonGetAnggota = (Button) findViewById(R.id.button_getAnggota_volley);
         buttonGetAnggota.setOnClickListener(this);
 
-        va=this;
-        registerReceiver(getProcessStatus, new IntentFilter(GlobalConst.ID_BROADCAST_OTHER_PROCESS));
+//        va=this;
+        //      registerReceiver(getProcessStatus, new IntentFilter(GlobalConst.ID_BROADCAST_OTHER_PROCESS));
 
     }
-
-    private static BroadcastReceiver getProcessStatus = new BroadcastReceiver() {
-
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            Bundle extras = intent.getExtras();
-            if (extras != null) {
-                final String message = extras.getString(GlobalConst.ID_RESULT_FROM_OTHER_PROCESS);
-                Log.i("SDP NOTIFICATION","");
-                va.generateNotification(message);
-            }
-        }
-    };
 
     @Override
     public void onClick(View v) {
         if (v.getId() == buttonGetAnggota.getId()) {
-//            String url = "http://triwahyuprasetyo.xyz/daftaranggota.php";
-//            JsonObjectRequest jsObjRequest = new JsonObjectRequest
-//                    (Request.Method.GET, url, null, new Response.Listener<JSONObject>() {
-//
-//                        @Override
-//                        public void onResponse(JSONObject response) {
-//                            Log.i("SDP Volley", "Response : SUCCESS");
-//                            try {
-//                                JSONArray menuitemArray = response.getJSONArray("data");
-//                                daftarId = new String[menuitemArray.length()];
-//                                daftarNama = new String[menuitemArray.length()];
-//                                daftarAlamat = new String[menuitemArray.length()];
-//                                daftarUsername = new String[menuitemArray.length()];
-//                                daftarPassword = new String[menuitemArray.length()];
-//                                daftarLatitude = new String[menuitemArray.length()];
-//                                daftarLongitude = new String[menuitemArray.length()];
-//                                daftarFoto = new String[menuitemArray.length()];
-//                                for (int i = 0; i < menuitemArray.length(); i++) {
-//                                    daftarId[i] = menuitemArray.getJSONObject(i).getString("id").toString();
-//                                    daftarNama[i] = menuitemArray.getJSONObject(i).getString("nama").toString();
-//                                    daftarAlamat[i] = menuitemArray.getJSONObject(i).getString("alamat").toString();
-//                                    daftarUsername[i] = menuitemArray.getJSONObject(i).getString("username").toString();
-//                                    daftarPassword[i] = menuitemArray.getJSONObject(i).getString("password").toString();
-//                                    daftarLatitude[i] = menuitemArray.getJSONObject(i).getString("latitude").toString();
-//                                    daftarLongitude[i] = menuitemArray.getJSONObject(i).getString("longitude").toString();
-//                                    daftarFoto[i] = menuitemArray.getJSONObject(i).getString("foto").toString();
-//                                    Log.i("SDP Volley", daftarNama[i] + " - " + daftarAlamat[i]);
-//                                }
-//                            } catch (JSONException e) {
-//
-//                                e.printStackTrace();
-//                            }
-//                        }
-//                    }, new Response.ErrorListener() {
-//
-//                        @Override
-//                        public void onErrorResponse(VolleyError error) {
-//                            // TODO Auto-generated method stub
-//                            Log.i("SDP Volley", "Response : ERROR");
-//                        }
-//                    });
-//            // Access the RequestQueue through your singleton class.
-//            VolleySingleton.getInstance(this).addToRequestQueue(jsObjRequest);
+            String url = "http://triwahyuprasetyo.xyz/daftaranggota.php";
+            JsonObjectRequest jsObjRequest = new JsonObjectRequest
+                    (Request.Method.GET, url, null, new Response.Listener<JSONObject>() {
+
+                        @Override
+                        public void onResponse(JSONObject response) {
+                            Log.i("SDP Volley", "Response : SUCCESS");
+                            try {
+                                JSONArray menuitemArray = response.getJSONArray("data");
+                                daftarId = new String[menuitemArray.length()];
+                                daftarNama = new String[menuitemArray.length()];
+                                daftarAlamat = new String[menuitemArray.length()];
+                                daftarUsername = new String[menuitemArray.length()];
+                                daftarPassword = new String[menuitemArray.length()];
+                                daftarLatitude = new String[menuitemArray.length()];
+                                daftarLongitude = new String[menuitemArray.length()];
+                                daftarFoto = new String[menuitemArray.length()];
+                                for (int i = 0; i < menuitemArray.length(); i++) {
+                                    daftarId[i] = menuitemArray.getJSONObject(i).getString("id").toString();
+                                    daftarNama[i] = menuitemArray.getJSONObject(i).getString("nama").toString();
+                                    daftarAlamat[i] = menuitemArray.getJSONObject(i).getString("alamat").toString();
+                                    daftarUsername[i] = menuitemArray.getJSONObject(i).getString("username").toString();
+                                    daftarPassword[i] = menuitemArray.getJSONObject(i).getString("password").toString();
+                                    daftarLatitude[i] = menuitemArray.getJSONObject(i).getString("latitude").toString();
+                                    daftarLongitude[i] = menuitemArray.getJSONObject(i).getString("longitude").toString();
+                                    daftarFoto[i] = menuitemArray.getJSONObject(i).getString("foto").toString();
+                                    Log.i("SDP Volley", daftarNama[i] + " - " + daftarAlamat[i]);
+                                }
+                            } catch (JSONException e) {
+
+                                e.printStackTrace();
+                            }
+                        }
+                    }, new Response.ErrorListener() {
+
+                        @Override
+                        public void onErrorResponse(VolleyError error) {
+                            // TODO Auto-generated method stub
+                            Log.i("SDP Volley", "Response : ERROR");
+                        }
+                    });
+            // Access the RequestQueue through your singleton class.
+            VolleySingleton.getInstance(this).addToRequestQueue(jsObjRequest);
 
             //generateNotification("Hello Notification");
 
-            Intent intent = new Intent(getApplicationContext(), ServiceSample.class);
-            getApplicationContext().startService(intent);
+//            Intent intent = new Intent(getApplicationContext(), ServiceSample.class);
+//            getApplicationContext().startService(intent);
 
         }
     }

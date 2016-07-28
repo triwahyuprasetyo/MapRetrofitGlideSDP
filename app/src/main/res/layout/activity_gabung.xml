@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/activity_gabung"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.triwayuprasetyo.mapretrofitglidesdp.GabungActivity">
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <Button
+            android:text="Retrofit"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/buttonG_retrofit" />
+
+        <Button
+            android:text="Glide"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/buttonG_glide" />
+
+        <Button
+            android:text="Volley"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/buttonG_volley" />
+
+        <Button
+            android:text="Serv, Notif, Broadcast"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/buttonG_serv" />
+
+        <Button
+            android:text="Gmap"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/buttonG_gmap" />
+
+    </LinearLayout>
+</android.support.constraint.ConstraintLayout>
